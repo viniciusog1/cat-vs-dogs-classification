@@ -8,6 +8,12 @@ Used tecnologies:
 - Pre-trained model
 - TensorFlow
 
+## 🌐 Machine Learning model working
+<img src="/images/dog1.png" alt="drawing" width="600"/>
+<img src="/images/dog2.png" alt="drawing" width="600"/>
+<img src="/images/cat1.png" alt="drawing" width="600"/>
+<img src="/images/cat2.png" alt="drawing" width="600"/>
+
 ## 🧠 Project Steps
 ### Dataset
 The first step is chose which dataset is gonna be used for make the machine learning model, as said before we use [this](https://www.kaggle.com/c/dogs-vs-cats) dataset that contains 25,000 images from dogs and cats
@@ -63,6 +69,29 @@ Good! Now we gonna separate our dataset to train and test.
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=2)
 ```
 
+Finally we gonna effectively train the model.
+In this project we use mobilenet model who is a machine learning model we use a technique called 'Transfer Learning' that means take advantage of an existing model and use it in another scenario
+```
+mobilenet_model = 'https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4'
+pretrained_model = hub.KerasLayer(mobilenet_model, input_shape=(224,224,3), trainable=False)
+```
+```
+num_of_classes = 2
+model = tf.keras.Sequential([
+    pretrained_model,
+    tf.keras.layers.Dense(num_of_classes)
+])
+model.summary()
+```
+```
+model.compile(
+    optimizer = 'adam',
+    loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+    metrics = ['acc']
+)
+
+model.fit(X_train_scaled, Y_train, epochs=5)
+```
 ## 🤔 How i use this project?
 ### Kaggle Configuration
 You need to have an account on [Kaggle](https://www.kaggle.com/) platform.
@@ -82,3 +111,4 @@ Download the 'dogs_and_cats_classification.ipynb' file on this github.
 Open this file with Jupyter notebook or Google Colab!
 
 Upload your 'kaggle.json' file on your project and run the code!
+Good! Now you can upload your dogs and cats images and ask to our model classify them!
